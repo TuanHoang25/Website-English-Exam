@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout_flashcards}">
+<head>
+    <title th:text="${title} ?: 'Cards List'">Cards List</title>
+    <link rel="stylesheet" href="/static/css/style2.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="site-content-wrapper">
+        <div class="content-wrapper">
+            <div class="container">
+                <!-- Success or Error Alert -->
+
+                <div class="alert alert-success">
+                    <span class=""></span>
+                    Chú ý: Bạn có thể tạo flashcards từ highlights (bao gồm các highlights các bạn đã tạo trước đây) trong trang chi tiết kết quả bài thi.
+                    <a data-toggle="collapse" href="#collapseGuide">Xem hướng dẫn.</a>
+                    <div class="collapse" id="collapseGuide">
+                        <br />
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/RGNMCXzvt4s" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-12 col-md-9">
+                        <br />
+                        <h2 id="list-flashcard">List từ đã tạo:</h2>
+                        <div class="row">
+                            <div class="col-6 col-md-3">
+                                <a href="/listflashcards/add">
+                                    <div class="termlist-grid-item create-btn">
+                                        <span class="fas fa-plus mr-1"></span>Tạo list từ
+                                    </div>
+                                </a>
+
+                            </div>
+
+                            <!-- Example list item -->
+                            <div class="col-6 col-md-3" th:each="list : ${lists}">
+                                <div class="termlist-grid-item gray-bg">
+                                    <a class="text-dark" th:href="@{/flashcards/list/{id}(id=${list.id})}">
+                                        <div class="termlist-grid-item-content-wrap">
+                                            <div class="termlist-grid-item-title" th:text="${list.title}">List Title</div>
+                                            <div class="termlist-grid-item-content">
+                                                <div>
+                                                    <span class="far fa-clone"></span>
+                                                    <span th:text="${list.flashCards.size()}">0</span> từ
+                                                </div>
+                                                <p class="termlist-grid-item-description">
+                                                    <i th:text="${list.description}">Description</i>
+                                                </p>
+                                                <div style="display: flex;flex-direction: row;">
+                                                <p class="termlist-grid-item-description" style="margin-right: 10%;">
+                                                    <a th:href="@{/listflashcards/edit/{id}(id=${list.id})}">Chỉnh Sửa</a>
+                                                </p>
+                                                <p class="termlist-grid-item-description">
+                                                    <a th:href="@{/listflashcards/delete/{id}(id=${list.id})}">Xóa</a>
+                                                </p>
+                                                </div>
+                                            </div>
+                                            <div class="termlist-grid-item-user">
+                                                <span class="termlist-grid-item-username" th:text="${list.user.username}">User</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <br />
+                        <h3>Chú ý</h3>
+                        <p>
+                            1. Để sử dụng tính năng flashcards hiệu quả, bạn cần tạo <a th:href="@{/flashcards}">flashcards</a> từ highlights hoặc từ điển cá nhân.
+                        </p>
+                        <p>
+                            2. Bạn có thể tạo <a th:href="@{/flashcards/lists}">danh sách flashcards</a> để học theo nhóm từ.
+                        </p>
+                        <p>
+                            3. Bạn có thể thêm, chỉnh sửa và xóa flashcards theo nhu cầu của bạn.
+                        </p>
+                        <p>
+                            4. Bạn có thể chia sẻ flashcards với bạn bè qua các mạng xã hội.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

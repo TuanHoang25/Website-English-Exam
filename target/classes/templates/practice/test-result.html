@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    <style>
+        .test-title {
+            display: flex;
+            align-items: center; /* Vertically centers the items */
+            justify-content: space-between; /* Adjust this if needed */
+        }
+
+        .test-title h4 {
+            margin: 0; /* Remove default margin */
+        }
+
+        .test-title a {
+            margin-left: auto; /* Pushes the link to the far right */
+            text-decoration: none; /* Removes underline */
+
+
+        }
+
+        #return-to-practice-page-btn{
+            background-color: #E8F2FF;
+            color: black;
+            padding: 8px;
+            margin: 5px;
+            border-radius: 20%;
+            border-style: groove;
+        }
+
+         #return-to-practice-page-btn:hover{
+             background-color: #1D0F7A;
+             color: white;
+         }
+
+        .question-number{
+            font-weight: bold;
+        }
+
+        .choices-section .choice input[type="radio"] {
+            transform: scale(1.5);
+            margin-right: 10px;
+        }
+
+        .choice{
+            margin: 20px;
+        }
+
+        .part-title{
+            color: #1d0f7a;
+        }
+
+        .question-square{
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            border: 1px solid;
+            border-color: #0d0b73;
+            cursor: pointer; /* Add cursor pointer to indicate interactivity */
+        }
+
+        .question-square:hover {
+            background-color: #0d0b73;
+            color: #dadae8;
+        }
+
+        .question-square.active {
+            background-color: #0d0b73;
+            color: #dadae8;
+        }
+
+        .question-square.selected {
+            background-color: #0d0b73;
+            color: #dadae8;
+        }
+
+        .fixed-sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+
+        .correct-answer{
+            background-color: #9deba0;
+        }
+
+        .incorrect-answer{
+            background-color: #f76576;
+        }
+
+
+    </style>
+</head>
+<body>
+<section layout:fragment="content" class="container mt-5">
+    <!-- Your existing content -->
+    <div class="container" th:object="${examTest}">
+
+        <span id="exam-test-id" th:text="${examTest.examTestId}" style="display:none;"></span>
+
+        <div class="test-title">
+            <h4 th:text="'kết quả bài thi ' + *{title}"></h4>
+            <a href="/practice" id="return-to-practice-page-btn">Thoát</a>
+        </div>
+        <div class="row d-flex">
+            <div class="col-md-9 mr-2 border border-dark overflow-auto" style="max-height:135vh;">
+                <div class="question mb-5" th:each="question : ${questions}">
+                    <p class="question-number" th:text="'Câu ' + ${question.number} +':'" th:attr="id='question-' + ${question.number}"></p>
+
+                    <img th:if="${question.imageUrl}" th:src="@{/images/test-images/{title}/{imageFileName}(title=${examTest.examTestId}, imageFileName=${question.imageUrl})}" />
+
+                    <!-- Display audio if audioUrl is present -->
+                    <audio th:if="${question.audioUrl}" controls>
+                        <source th:src="@{/audio/test-audio/{title}/{audioFileName}(title=${examTest.examTestId}, audioFileName=${question.audioUrl})}" type="audio/mpeg">
+                    </audio>
+                    <p th:if="${question.selectedAnswer} == null" th:text="'Bạn chưa chọn câu trả lời'"></p>
+                    <p class="question-text" th:if="${question.question}" th:text="${question.question}"></p>
+                    <!--Choices will be displayed here-->
+                    <div class="mt-3 choices-section">
+                        <div class="choice">
+                            <label th:for="'question-' + ${question.questionId} + '-A'"
+                                   th:text="${question.optionA}"
+                                   th:classappend="${question.selectedAnswer} == ${question.optionA} ?
+                       (${question.selectedAnswer} == ${question.correctAnswer} ? 'correct-answer' : 'incorrect-answer') : ''">
+                            </label>
+                        </div>
+                        <div class="choice">
+                            <label th:for="'question-' + ${question.questionId} + '-B'"
+                                   th:text="${question.optionB}"
+                                   th:classappend="${question.selectedAnswer} == ${question.optionB} ?
+                       (${question.selectedAnswer} == ${question.correctAnswer} ? 'correct-answer' : 'incorrect-answer') : ''">
+                            </label>
+                        </div>
+                        <div class="choice">
+                            <label th:for="'question-' + ${question.questionId} + '-C'"
+                                   th:text="${question.optionC}"
+                                   th:classappend="${question.selectedAnswer} == ${question.optionC} ?
+                       (${question.selectedAnswer} == ${question.correctAnswer} ? 'correct-answer' : 'incorrect-answer') : ''">
+                            </label>
+                        </div>
+                        <div th:if="${question.optionD}" class="choice">
+                            <label th:for="'question-' + ${question.questionId} + '-D'"
+                                   th:text="${question.optionD}"
+                                   th:classappend="${question.selectedAnswer} == ${question.optionD} ?
+                       (${question.selectedAnswer} == ${question.correctAnswer} ? 'correct-answer' : 'incorrect-answer') : ''">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="show-correct-answer" th:if="${question.selectedAnswer} != ${question.correctAnswer}">
+                        <strong><p th:text="'Đáp án đúng: ' + ${question.correctAnswer}" style="color: #4CC082"></p></strong>
+                    </div>
+                    <div class="script-and-explain">
+                        <p>Script/Giải thích:</p>
+                        <p th:text="${question.script}"></p>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col-md-3 border border-dark h-100" >
+                <div class="row">
+                    <div id="info-result-test" class="col-md-12 d-flex flex-column justify-content-center" th:object="${examTestResult}">
+                        <p class="w-100 text-center">Kết quả chi tiết:</p>
+                        <h5>
+                            Điểm: <span th:text="*{correctQuestions}"></span>/<span th:text="${totalQuestions}"></span>
+                        </h5>
+                        <p>
+                            <strong>Số câu đúng: <span th:text="*{correctQuestions}" style="color: green;"></span></strong>
+                        </p>
+                        <p>
+                            <strong>Số câu sai: <span th:text="*{incorrectQuestions}" style="color: red;"></span></strong>
+                        </p>
+                        <p>
+                            <strong>Số câu chưa chọn: <span th:text="*{unchoosenQuestions}" ></span></strong>
+                        </p>
+
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5 class="part-title">Part 1</h5>
+                                <div class="row" >
+                                    <div class="col-md-2 question-square m-1" th:each="question : ${questionsOfPart1}" th:text="${question.number}"  th:attr="data-question-id=${question.questionId}" th:onclick="'onJumpToQuestion(\'' + ${question.number} + '\')'"
+                                         th:classappend="${question.selectedAnswer} != null ?
+                                        (${question.selectedAnswer} == ${question.correctAnswer} ? 'correct-answer' : 'incorrect-answer') : ''"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <h5 class="part-title">Part 2</h5>
+                                <div class="row" >
+                                    <div class="col-md-2 question-square m-1" th:each="question : ${questionsOfPart2}" th:text="${question.number}"  th:attr="data-question-id=${question.questionId}" th:onclick="'onJumpToQuestion(\'' + ${question.number} + '\')'"
+                                         th:classappend="${question.selectedAnswer} != null ?
+                                        (${question.selectedAnswer} == ${question.correctAnswer} ? 'correct-answer' : 'incorrect-answer') : ''"></div></div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <h5 class="part-title">Part 3</h5>
+                                <div class="row" >
+                                    <div class="col-md-2 question-square m-1" th:each="question : ${questionsOfPart3}" th:text="${question.number}"  th:attr="data-question-id=${question.questionId}" th:onclick="'onJumpToQuestion(\'' + ${question.number} + '\')'"
+                                         th:classappend="${question.selectedAnswer} != null ?
+                                        (${question.selectedAnswer} == ${question.correctAnswer} ? 'correct-answer' : 'incorrect-answer') : ''"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <h5 class="part-title">Part 4</h5>
+                                <div class="row" >
+                                    <div class="col-md-2 question-square m-1" th:each="question : ${questionsOfPart4}" th:text="${question.number}"  th:attr="data-question-id=${question.questionId}" th:onclick="'onJumpToQuestion(\'' + ${question.number} + '\')'"
+                                         th:classappend="${question.selectedAnswer} != null ?
+                                        (${question.selectedAnswer} == ${question.correctAnswer} ? 'correct-answer' : 'incorrect-answer') : ''"></div>                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <h5 class="part-title">Part 5</h5>
+                                <div class="row" >
+                                    <div class="col-md-2 question-square m-1" th:each="question : ${questionsOfPart5}" th:text="${question.number}"  th:attr="data-question-id=${question.questionId}" th:onclick="'onJumpToQuestion(\'' + ${question.number} + '\')'"
+                                         th:classappend="${question.selectedAnswer} != null ?
+                                        (${question.selectedAnswer} == ${question.correctAnswer} ? 'correct-answer' : 'incorrect-answer') : ''"></div>                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <h5 class="part-title">Part 6</h5>
+                                <div class="row" >
+                                    <div class="col-md-2 question-square m-1" th:each="question : ${questionsOfPart6}" th:text="${question.number}"  th:attr="data-question-id=${question.questionId}" th:onclick="'onJumpToQuestion(\'' + ${question.number} + '\')'"
+                                         th:classappend="${question.selectedAnswer} != null ?
+                                        (${question.selectedAnswer} == ${question.correctAnswer} ? 'correct-answer' : 'incorrect-answer') : ''"></div>                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <h5 class="part-title">Part 7</h5>
+                                <div class="row" >
+                                    <div class="col-md-2 question-square m-1" th:each="question : ${questionsOfPart7}" th:text="${question.number}"  th:attr="data-question-id=${question.questionId}" th:onclick="'onJumpToQuestion(\'' + ${question.number} + '\')'"
+                                         th:classappend="${question.selectedAnswer} != null ?
+                                        (${question.selectedAnswer} == ${question.correctAnswer} ? 'correct-answer' : 'incorrect-answer') : ''"></div>                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <script th:inline="javascript">
+        function onJumpToQuestion(questionNumber) {
+               document.getElementById('question-' + questionNumber).scrollIntoView({ behavior: 'instant' });
+        }
+    </script>
+
+
+</section>
+
+</body>
+
+</html>

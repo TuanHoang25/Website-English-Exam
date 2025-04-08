@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutAdmin}">
+<head>
+    <title>Create Test</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+<section layout:fragment="content" class="container">
+    <h1>Tạo đề thi</h1>
+
+    <form th:action="@{/admin/tests/create}" th:object="${examTest}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">Tên đề thi:</label>
+            <input type="text" id="title" th:field="*{title}" required/><br/>
+        </div>
+        <div class="form-group">
+            <label for="file">Thêm file câu hỏi:</label>
+            <input type="file" id="file" name="file" required/><br/>
+        </div>
+        <div class="form-group">
+            <label for="imageFiles">Thêm file ảnh:</label>
+            <input type="file" id="imageFiles" name="imageFiles" multiple class="form-control-file" accept="image/*" required/>
+        </div>
+        <div class="form-group">
+            <label for="audioFiles">Them file audio:</label>
+            <input type="file" id="audioFiles" name="audioFiles" multiple class="form-control-file" accept="audio/*" required/>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Lưu</button>
+        <a class="btn btn-secondary" th:href="@{/admin/tests}">Huỷ</a>
+    </form>
+
+</section>
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin liên hệ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        .column {
+            width: 23%;
+        }
+        h2 {
+            font-size: 18px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            margin-bottom: 10px;
+        }
+        .footer {
+            padding: 20px;
+            background-color: #e0e0e0;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+<section layout:fragment="content" class="container mt-5">
+    <div class="container">
+        <div class="column">
+            <h2>Khóa học online</h2>
+            <ul>
+                <li>IELTS General Reading</li>
+                <li>IELTS General Writing</li>
+                <li>Complete TOEIC</li>
+                <li>IELTS Fundamentals</li>
+                <li>IELTS Intensive Listening</li>
+                <li>IELTS Intensive Reading</li>
+                <li>IELTS Intensive Speaking</li>
+                <li>IELTS Intensive Writing</li>
+            </ul>
+        </div>
+        <div class="column">
+            <h2>Tài nguyên</h2>
+            <ul>
+                <li>Thư viện đề thi</li>
+                <li>Blog</li>
+                <li>Kho tài liệu</li>
+                <li>Nhóm học tập</li>
+            </ul>
+        </div>
+        <div class="column">
+            <h2>Hỗ trợ</h2>
+            <ul>
+                <li>Hướng dẫn sử dụng</li>
+                <li>Hướng dẫn mua hàng</li>
+                <li>Chăm sóc khách hàng</li>
+                <li>Phản hồi khiếu nại</li>
+            </ul>
+        </div>
+        <div class="column">
+            <h2>AGENT</h2>
+            <ul>
+                <li>Về chúng tôi</li>
+                <li>Liên hệ</li>
+                <li>Điều khoản bảo mật</li>
+                <li>Điều khoản sử dụng</li>
+                <li>Điều khoản và Điều Kiện Giao Dịch</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        <h2>Thông tin doanh nghiệp</h2>
+        <p>Công ty TNHH Công Nghệ A Plus</p>
+        <p>Giấy chứng nhận Đăng ký doanh nghiệp số: 0109675459 do Sở Kế hoạch và Đầu tư thành phố Hà Nội cấp ngày 17/06/2021.</p>
+        <p>Điện thoại liên hệ/Hotline: 096 369 5525</p>
+        <p>Email: study4.team@gmail.com</p>
+        <p>Địa chỉ trụ sở: Số 15, Ngõ 208 Giải Phóng, Phường Phương Liệt, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam</p>
+        <p>&copy; 2021 - Bản quyền của Công ty TNHH Công Nghệ A Plus.</p>
+    </div>
+</section>
+
+</body>
+</html>

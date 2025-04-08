@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layout}">
+<head>
+    <title>Chi tiết khóa học</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<section layout:fragment="content" class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <img th:src="@{/images/{imageName}(imageName=${course.imageUrl})}" class="img-fluid" alt="Course Image">
+        </div>
+        <div class="col-md-8">
+            <h3 class="mb-4" th:text="${course.title}" style="line-height: 1.5; text-decoration: underline; margin-top: 20px;text-transform: uppercase"></h3>
+            <pre th:text="${course.description}" style="line-height: 1.5; font-size: 18px; font-family: 'Arial', sans-serif;"></pre>
+            <p style="color: red; font-weight: bold; font-size: 18px;" th:text="${course.price + ' Đ'}">Giá: </p>
+            <form th:action="@{/enrollments/add}" method="post" sec:authorize="isAuthenticated()">
+                <input type="hidden" th:value="${course.id}" name="courseId"/>
+                <button type="submit" class="btn btn-primary">Đăng ký ngay</button>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <section class="mt-5" style="border: 1px solid white; padding: 25px; box-shadow: 5px 5px 10px; border-radius: 15px; background-color: #402E7A; color: white;">
+        <h2 style="text-align: center; color: white; background: cadetblue; border-radius: 15px; padding: 5px;">CHƯƠNG TRÌNH HỌC</h2>
+        <pre th:text="${course.study_program}" style="line-height: 1.5; font-size: 18px; font-family: 'Arial', sans-serif; margin-top: 30px"></pre>
+    </section>
+    <hr>
+    <section id="register" style="background-color: white;">
+        <div class="container mt-5" style="background-color: #667BC6; border-radius: 15px; padding: 60px">
+            <div class="row align-items-center">
+                <div class="offset-md-1 col-md-5 ">
+                    <div>
+                        <h2 class="display-6 fw-bold" style="line-height: 1.5; text-transform: uppercase; color: white">Đăng ký khóa học và nhận GIẢM GIÁ 30% khi đăng kí combo 2 khóa học trực tuyến của bạn</h2>
+                        <p style="font-size: 18px; line-height: 1.5; color: white">Đăng ký nhận thông báo của chúng tôi và không bao giờ bỏ lỡ bất kỳ ưu đãi nào !!</p>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="d-grid">
+                        <input type="name" name="name" placeholder="Nhập họ tên của bạn" required
+                               class="form-control bg-white border-0 rounded-4 shadow-none rounded-pill text-center py-3 w-100 mb-4">
+                        <input type="phone" name="phone" placeholder="Nhập số điện thoại của bạn" required
+                               class="form-control bg-white border-0 rounded-4 shadow-none rounded-pill text-center py-3 w-100 mb-4">
+                        <input type="email" name="email" placeholder="Nhập gmail của bạn" required
+                               class="form-control bg-white border-0 rounded-4 shadow-none rounded-pill text-center py-3 w-100 mb-4">
+                        <div class="d-grid">
+                            <button class="btn btn-primary px-3 py-3" onclick="FreeDiscount()">NHẬN ƯU ĐÃI NGAY</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <hr>
+    <!-- Related Courses -->
+    <section class="mt-5">
+        <h2 style="text-align: center"> CÁC KHÓA HỌC LIÊN QUAN</h2>
+        <div class="row" style="margin-top: 30px">
+            <div class="col-md-3 mb-3" th:each="relatedCourse : ${relatedCourses}">
+                <div class="card">
+                    <img th:src="@{/images/{imageName}(imageName=${relatedCourse.imageUrl})}" class="card-img-top" alt="Course Image">
+                    <div class="card-body text-center">
+                        <h4 class="card-title" th:text="${relatedCourse.title}"></h4>
+                        <p class="card-text" th:text="${relatedCourse.price + ' Đ'}" style="color: red; font-weight: bold; font-size: 18px;">Giá: </p>
+                        <a th:href="@{'/courses/' + ${relatedCourse.id}}" class="btn btn-primary">Xem Chi Tiết</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

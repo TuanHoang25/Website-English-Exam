@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout_flashcards}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Detail</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+
+<body>
+<section layout:fragment="content">
+<div class="container mt-5">
+    <h1 th:text="${blog.title}"></h1> <!-- Corrected attribute name to match controller -->
+    <p th:text="${blog.content}"></p> <!-- Corrected attribute name to match controller -->
+    <a href="/blogs" class="btn btn-primary">Back to Blog List</a>
+</div>
+</section>
+</body>
+</html>

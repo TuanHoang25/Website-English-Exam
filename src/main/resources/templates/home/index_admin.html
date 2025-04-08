@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security5"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8" />
+    <title>Agent Admin</title>
+    <link rel="stylesheet" href="/admin/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+</head>
+<body>
+<div class="container-fluid" style="margin: 0; padding: 0">
+    <nav>
+        <ul class="nav-list" style="padding: 0">
+            <li><a href="#" class="logo nav-link">
+                <img src="img/logoChothes.jpg">
+                <span class="nav-item">ADMIN</span>
+            </a></li>
+            <li><a href="#" class="nav-link">
+                <i class="fas fa-home"></i>
+                TRANG CHỦ
+            </a></li>
+            <li id="dropdown">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-window-restore"></i>
+                    QUẢN LÝ
+                </a>
+                <ul class="subnav hidden">
+                    <li><a href="/admin/courses" class="nav-link"><i class="fas"></i>KHÓA HỌC</a></li>
+                    <li><a href="#" class="nav-link"><i class="fas"></i>KHÓA HỌC ĐĂNG KÝ</a></li>
+                    <li><a href="#" class="nav-link"><i class="fas"></i>BÀI HỌC</a></li>
+                    <li><a href="/admin/tests" class="nav-link"><i class="fas"></i>LUYỆN THI</a></li>
+                    <li><a href="/" class="nav-link"><i class="fas"></i>BÀI VIẾT</a></li>
+                </ul>
+            </li>
+
+            <li><a href="#" class="nav-link">
+                <i class="fas fa-cog"></i>
+                CÀI ĐẶT
+            </a></li>
+            <li><a href="#" class="logout nav-link">
+                <i class="fas fa-sign-out-alt"></i>
+                ĐĂNG XUẤT
+            </a></li>
+        </ul>
+    </nav>
+    <section class="main" layout:fragment="content">
+        <!-- Nội dung chính ở đây -->
+    </section>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const dropdown = document.getElementById('dropdown');
+      const subnav = dropdown.querySelector('.subnav');
+
+      dropdown.addEventListener('click', function() {
+        subnav.classList.toggle('hidden');
+      });
+    });
+</script>
+</body>
+</html>

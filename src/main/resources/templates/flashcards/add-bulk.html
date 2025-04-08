@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout_flashcards}">
+<head>
+    <title>Thêm nhiều Flashcards</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<section layout:fragment="content" class="container mt-5">
+    <div class="container">
+        <h1>Thêm nhiều Flashcards</h1>
+        <form id="create-flashcards-form" th:action="@{/flashcards/list/{listId}/add-bulk(listId=${listId})}" th:object="${bulkFlashcardForm}" method="POST" enctype="multipart/form-data">
+            <table>
+                <thead>
+                <tr>
+                    <th>Từ mới</th>
+                    <th>Định nghĩa</th>
+                </tr>
+                </thead>
+                <tbody id="flashcards-table-body">
+                <!-- Iterate over the flashcards list -->
+                <tr th:each="card, cardStat : ${bulkFlashcardForm.cards}" th:object="${card}" th:field="*{cards[__${cardStat.index}__]}">
+                    <td><input type="text" th:field="*{cards[__${cardStat.index}__].question}" class="form-control"></td>
+                    <td><input type="text" th:field="*{cards[__${cardStat.index}__].answer}" class="form-control"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <button type="button" onclick="addRow()" class="btn btn-secondary">Thêm dòng</button>
+            <button type="submit" class="btn btn-primary">Nộp</button>
+        </form>
+    </div>
+
+    <script>
+        let rowCount = 0;
+
+        function addRow() {
+            const tbody = document.getElementById('flashcards-table-body');
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td><input type="text" name="cards[${rowCount}].question" class="form-control"></td>
+                <td><input type="text" name="cards[${rowCount}].answer" class="form-control"></td>
+            `;
+
+            tbody.appendChild(row);
+            rowCount++;
+        }
+    </script>
+</section>
+</body>
+</html>

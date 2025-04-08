@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    <style>
+        .test-title {
+            display: flex;
+            align-items: center; /* Vertically centers the items */
+            justify-content: space-between; /* Adjust this if needed */
+        }
+
+        .test-title h4 {
+            margin: 0; /* Remove default margin */
+        }
+
+        .test-title a {
+            margin-left: auto; /* Pushes the link to the far right */
+            text-decoration: none; /* Removes underline */
+
+
+        }
+
+        #return-to-practice-page-btn{
+            background-color: #E8F2FF;
+            color: black;
+            padding: 8px;
+            margin: 5px;
+            border-radius: 20%;
+            border-style: groove;
+        }
+
+         #return-to-practice-page-btn:hover{
+             background-color: #1D0F7A;
+             color: white;
+         }
+
+        .question-number{
+            font-weight: bold;
+        }
+
+        .choices-section .choice input[type="radio"] {
+            transform: scale(1.5);
+            margin-right: 10px;
+        }
+
+        .choice{
+            margin: 20px;
+        }
+
+        .part-title{
+            color: #1d0f7a;
+        }
+
+        .question-square{
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            border: 1px solid;
+            border-color: #0d0b73;
+            cursor: pointer; /* Add cursor pointer to indicate interactivity */
+        }
+
+        .question-square:hover {
+            background-color: #0d0b73;
+            color: #dadae8;
+        }
+
+        .question-square.active {
+            background-color: #0d0b73;
+            color: #dadae8;
+        }
+
+        .question-square.selected {
+            background-color: #0d0b73;
+            color: #dadae8;
+        }
+
+        .fixed-sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+
+
+    </style>
+</head>
+<body>
+<section layout:fragment="content" class="container mt-5">
+        <!-- Your existing content -->
+        <div class="container" th:object="${examTest}">
+            <span id="mins" th:text="${mins}" style="display:none;"></span>
+            <span id="exam-test-id" th:text="${examTest.examTestId}" style="display:none;"></span>
+
+            <div class="test-title">
+                <h4 th:text="*{title}"></h4>
+                <a href="/practice" id="return-to-practice-page-btn">Thoát</a>
+            </div>
+            <form action="/practice/submit-answers" method="post">
+                <div class="row d-flex">
+                    <div class="col-md-9 mr-2 border border-dark overflow-auto" style="max-height:150vh;">
+                        <div class="question" th:each="question : *{questions}">
+                            <p class="question-number" th:text="'Câu ' + ${question.number} +':'" th:attr="id='question-' + ${question.number}"></p>
+
+                            <img th:if="${question.imageUrl}" th:src="@{/images/test-images/{title}/{imageFileName}(title=${examTest.examTestId}, imageFileName=${question.imageUrl})}" />
+
+                            <!-- Display audio if audioUrl is present -->
+                            <audio th:if="${question.audioUrl}" controls>
+                                <source th:src="@{/audio/test-audio/{title}/{audioFileName}(title=${examTest.examTestId}, audioFileName=${question.audioUrl})}" type="audio/mpeg">
+                            </audio>
+                            <p class="question-text" th:if="${question.question}" th:text="${question.question}"></p>
+                            <!--Choices will be displayed here-->
+                            <div class="mt-3 mb-5 choices-section">
+                                <div th:if="${question.optionA}" class="choice">
+                                    <input type="radio" th:name="'answers[' + ${question.questionId} + ']'" th:value="${question.optionA}" th:id="'question-' + ${question.questionId} + '-A'" />
+                                    <label th:for="'question-' + ${question.questionId} + '-A'" th:text="${question.optionA}"></label>
+                                </div>
+                                <div th:if="${question.optionB}" class="choice">
+                                    <input type="radio" th:name="'answers[' + ${question.questionId} + ']'" th:value="${question.optionB}" th:id="'question-' + ${question.questionId} + '-B'" />
+                                    <label th:for="'question-' + ${question.questionId} + '-B'" th:text="${question.optionB}"></label>
+                                </div>
+                                <div th:if="${question.optionC}" class="choice">
+                                    <input type="radio" th:name="'answers[' + ${question.questionId} + ']'" th:value="${question.optionC}" th:id="'question-' + ${question.questionId} + '-C'" />
+                                    <label th:for="'question-' + ${question.questionId} + '-C'" th:text="${question.optionC}"></label>
+                                </div>
+                                <div th:if="${question.optionD}" class="choice">
+                                    <input type="radio" th:name="'answers[' + ${question.questionId} + ']'" th:value="${question.optionD}" th:id="'question-' + ${question.questionId} + '-D'" />
+                                    <label th:for="'question-' + ${question.questionId} + '-D'" th:text="${question.optionD}"></label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-3 border border-dark" style="max-height:150vh;">
+                        <div class="row">
+                            <div id="time-countdown" class="col-md-12 d-flex flex-column justify-content-center">
+                                <p class="w-100 text-center"> Thời gian còn lại:</p>
+                                <h3 class="w-100 text-center">
+                                    <span id="minutes" class="time-display"></span>:<span id="seconds" class="time-display"></span>
+                                </h3>
+                                <button id="submit-test-btn" class="btn btn-secondary text-center" type="submit">
+                                    Nộp bài
+                                </button>
+
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h5 class="part-title">Part 1</h5>
+                                        <div class="row" >
+                                            <div class="col-md-2 question-square m-1" th:each="question : ${questionsOfPart1}" th:text="${question.number}"  th:attr="data-question-id=${question.questionId}"  th:onclick="'onJumpToQuestion(\'' + ${question.number} + '\')'"></div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h5 class="part-title">Part 2</h5>
+                                        <div class="row" >
+                                            <div class="col-md-2 question-square m-1" th:each="question : ${questionsOfPart2}" th:text="${question.number}"  th:attr="data-question-id=${question.questionId}" th:onclick="'onJumpToQuestion(\'' + ${question.number} + '\')'"></div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h5 class="part-title">Part 3</h5>
+                                        <div class="row" >
+                                            <div class="col-md-2 question-square m-1" th:each="question : ${questionsOfPart3}" th:text="${question.number}"  th:attr="data-question-id=${question.questionId}" th:onclick="'onJumpToQuestion(\'' + ${question.number} + '\')'"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h5 class="part-title">Part 4</h5>
+                                        <div class="row" >
+                                            <div class="col-md-2 question-square m-1" th:each="question : ${questionsOfPart4}" th:text="${question.number}"  th:attr="data-question-id=${question.questionId}" th:onclick="'onJumpToQuestion(\'' + ${question.number} + '\')'"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h5 class="part-title">Part 5</h5>
+                                        <div class="row" >
+                                            <div class="col-md-2 question-square m-1" th:each="question : ${questionsOfPart5}" th:text="${question.number}"  th:attr="data-question-id=${question.questionId}" th:onclick="'onJumpToQuestion(\'' + ${question.number} + '\')'"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h5 class="part-title">Part 6</h5>
+                                        <div class="row" >
+                                            <div class="col-md-2 question-square m-1" th:each="question : ${questionsOfPart6}" th:text="${question.number}"  th:attr="data-question-id=${question.questionId}"  th:onclick="'onJumpToQuestion(\'' + ${question.number} + '\')'"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h5 class="part-title">Part 7</h5>
+                                        <div class="row" >
+                                            <div class="col-md-2 question-square m-1" th:each="question : ${questionsOfPart7}" th:text="${question.number}"  th:attr="data-question-id=${question.questionId}" th:onclick="'onJumpToQuestion(\'' + ${question.number} + '\')'"></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <input type="hidden" th:name="examTestId" th:value="${examTest.examTestId}" />
+            </form>
+
+
+
+        </div>
+
+
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', (event) => {
+           const submitButton = document.getElementById('submit-test-btn');
+           const minsElement = document.getElementById('mins');
+           const initialMinutes = parseInt(minsElement.textContent, 10) || 0;
+           let time = initialMinutes * 60;
+           const countdownElement = document.getElementById('time-countdown');
+           const minutesElement = document.getElementById('minutes');
+           const secondsElement = document.getElementById('seconds');
+
+           function updateCountdown() {
+               const minutesLeft = Math.floor(time / 60);
+               const secondsLeft = time % 60;
+
+               minutesElement.textContent = String(minutesLeft).padStart(2, '0');
+               secondsElement.textContent = String(secondsLeft).padStart(2, '0');
+
+               if (time > 0) {
+                   time--;
+               } else {
+                   clearInterval(countdownInterval);
+                   window.removeEventListener('beforeunload', beforeUnloadHandler);
+                    submitButton.click();
+               }
+           }
+
+           const countdownInterval = setInterval(updateCountdown, 1000);
+           updateCountdown();
+
+           document.querySelectorAll('.choices-section .choice input[type="radio"]').forEach(radio => {
+               radio.addEventListener('change', function() {
+                   const questionId = this.id.split('-')[1];
+                   const questionSquare = document.querySelector(`.question-square[data-question-id="${questionId}"]`);
+                   if (questionSquare) {
+                       questionSquare.classList.add('active');
+                   }
+               });
+           });
+
+           function beforeUnloadHandler(e) {
+                const confirmationMessage = 'Bạn sẽ mất bài thi nếu như thoát. Tiếp tục ?';
+                (e || window.event).returnValue = confirmationMessage;
+                return confirmationMessage;
+           }
+
+           window.addEventListener('beforeunload', beforeUnloadHandler);
+
+
+       });
+        function onJumpToQuestion(questionNumber) {
+               document.getElementById('question-' + questionNumber).scrollIntoView({ behavior: 'instant' });
+        }
+    </script>
+
+
+</section>
+
+</body>
+
+</html>

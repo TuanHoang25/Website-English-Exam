@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin Đăng ký Khóa học</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <style>
+        .info {
+            border: 1px solid #ddd;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .btn-pay {
+            margin-top: 10px;
+        }
+        .payment-info {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<section layout:fragment="content" class="container mt-2">
+    <h2 style="text-align: center">THÔNG TIN ĐĂNG KÝ KHÓA HỌC</h2>
+    <form action="/enrollments/pay" method="post" onsubmit="return payNow(event)">
+        <div class="row mt-5">
+            <div class="col-md-6 info">
+                <h4 style="text-align: center"> THÔNG TIN NGƯỜI DÙNG</h4>
+                <div class="form-group">
+                    <label for="name">Họ tên: </label>
+                    <input type="text" id="name" name="name" class="form-control" th:value="${user != null ? user.username : ''}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Số điện thoại:</label>
+                    <input type="text" id="phone" name="phone" class="form-control" th:value="${user != null ? user.phone : ''}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" name="email" class="form-control" th:value="${user != null ? user.email : ''}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="address">Địa chỉ:</label>
+                    <input type="text" id="address" name="address" class="form-control" th:value="${user != null ? user.address : ''}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="dateOfBirth">Ngày sinh:</label>
+                    <input type="text" id="dateOfBirth" name="dateOfBirth" class="form-control" th:value="${user != null ? user.dateOfBirth : ''}" readonly>
+                </div>
+                <h4 style="text-align: center; margin-top: 30px">PHƯƠNG THỨC THANH TOÁN</h4>
+                <h6 style="margin-top: 20px;">Vui lòng chọn phương thức thanh toán: </h6>
+                <div class="form-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="paymentMethod" id="mbBank" value="MB Bank" onclick="showPaymentInfo('mbBank')">
+                        <label class="form-check-label" for="mbBank">MB Bank</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="paymentMethod" id="momo" value="Momo" onclick="showPaymentInfo('momo')">
+                        <label class="form-check-label" for="momo">Momo</label>
+                    </div>
+                </div>
+                <div id="mbBankInfo" class="payment-info" style="text-align: center">
+                    <img src="/images/qrmbbank.png" alt="MB Bank QR Code" class="img-fluid" style="width: 300px">
+                    <p style="margin-top: 20px">Ngân hàng: MB Bank</p>
+                    <p>Số tài khoản: 0927749820</p>
+                    <p>Tên chủ thẻ: PHAM DUC TAI</p>
+                    <p>Nội dung chuyển khoản: Số điện thoại_Tên khóa học 1_Tên khóa học 2,3,4 (nếu có)</p>
+                    <p>(Ví dụ nội dung chuyển khoản: 0927749820_Khóa học luyện thi TOEIC từ 0-350+_Khóa học luyện thi TOEIC từ 350-550+_ ....)</p>
+                </div>
+                <div id="momoInfo" class="payment-info" style="text-align: center">
+                    <img src="/images/qrmomo.png" alt="Momo QR Code" class="img-fluid" style="width: 300px">
+                    <p style="margin-top: 20px">Ví điện tử: Momo</p>
+                    <p>Số tài khoản: 0927749820</p>
+                    <p>Tên chủ thẻ: PHAM DUC TAI</p>
+                    <p>Nội dung chuyển khoản: Số điện thoại_Tên khóa học 1_Tên khóa học 2,3,4 (nếu có)</p>
+                    <p>(Ví dụ nội dung chuyển khoản: 0927749820_Khóa học luyện thi TOEIC từ 0-350+_Khóa học luyện thi TOEIC từ 350-550+_ ....)</p>
+                </div>
+                <div class="upload-section mt-3">
+                    <label for="transactionImage">Upload hình ảnh giao dịch thanh toán:</label>
+                    <input type="file" id="transactionImage" name="transactionImage" class="form-control">
+                </div>
+                <div class="form-check mt-3">
+                    <input class="form-check-input" type="checkbox" id="confirmPayment">
+                    <label class="form-check-label" for="confirmPayment">
+                        Tôi đã xác nhận thanh toán
+                    </label>
+                </div>
+
+            </div>
+            <div class="col-md-6 info">
+                <h4 style="text-align: center; margin-bottom: 20px;">DANH SÁCH KHÓA HỌC ĐĂNG KÝ</h4>
+                <table class="table" th:unless="${enrollments.isEmpty()}">
+                    <thead class="table-light">
+                    <tr>
+                        <th colspan="2" style="text-align: center">Tên Khóa Học</th>
+                        <th style="text-align: center">Giá</th>
+                        <th style="text-align: center"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="enrollment : ${enrollments}">
+                        <input type="hidden" name="courseId" th:value="${enrollment.course.id}">
+                        <td>
+                            <img th:src="@{/images/{imageName}(imageName=${enrollment.course.imageUrl})}" class="img-fluid" alt="Course Image" style="width: 150px">
+                        </td>
+                        <td th:text="${enrollment.course.title}" style="font-size: 18px; font-weight: bold; text-transform: uppercase"></td>
+                        <td th:text="${enrollment.course.price}" style="font-size: 18px; font-weight: bold; color: red"></td>
+                        <td  style="text-align: center">
+                            <a th:href="@{/enrollments/remove/{courseId}(courseId=${enrollment.course.id})}"
+                               class="btn-sm">X</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-between mt-4">
+                    <p style="color: red; font-size: 20px; font-weight: bold">Tạm tính: <span id="initialPrice" th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 2, 'POINT')}"></span> VND</p>
+                    <a href="/enrollments/clear" class="btn btn-danger">Xóa tất cả</a>
+                </div>
+                <div class="form-group mt-3">
+                    <h5 for="discountCode" style="text-align: center; margin: 20px 0">NHẬP MÃ GIẢM GIÁ</h5>
+                    <div class="d-flex">
+                        <input type="text" id="discountCode" name="discountCode" class="form-control" style="width: 70%;" placeholder="Nhập mã giảm giá">
+                        <button onclick="applyDiscount()" class="btn btn-primary" style="width: 20%; margin-left: 20px;">Áp dụng</button>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <p style="color: green; font-size: 20px; font-weight: bold">Tổng tiền: <span id="finalPrice" th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 2, 'POINT')}"></span> VND</p>
+                </div>
+                <button type="submit" class="btn btn-primary btn-pay mt-2">Thanh toán ngay</button>
+            </div>
+        </div>
+    </form>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/jquery-1.11.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+<script src="/js/plugins.js"></script>
+<script src="/js/script.js"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+</body>
+</html>

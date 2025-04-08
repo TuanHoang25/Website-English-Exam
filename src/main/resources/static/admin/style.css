@@ -1,0 +1,95 @@
+*{
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: none;
+  text-decoration: none;
+  box-sizing: border-box;
+  font-family: "Arial", sans-serif;
+}
+body{
+  background: rgb(226, 226, 226);
+}
+nav .nav-list{
+  position: sticky;
+  top: 0;
+  bottom: 0;
+  height: 100vh;
+  left: 0;
+  width: 75px;
+  background: #000260;
+  overflow: hidden;
+  transition: 1s;
+  box-shadow: 2px 2px 1px #000260;
+}
+nav .nav-list:hover{
+  width: 250px;
+  transition: 1s;
+}
+.logo{
+  text-align: center;
+  display: flex;
+  margin: 10px 0 0 10px;
+}
+
+.logo img{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+.logo span{
+  font-weight: bold;
+  padding-left: 15px;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+nav .nav-list .nav-link{
+  position: relative;
+  width: 280px;
+  font-size: 14px;
+  color: rgb(85, 83, 83);
+  display: flex;
+  padding: 8px;
+  align-items: center;
+  color: white;
+}
+nav .nav-list .nav-link .fas{
+  position: relative;
+  width: 70px;
+  height: 40px;
+  top: 12px;
+  font-size: 20px;
+  text-align: center;
+}
+
+nav .nav-list .nav-link:hover{
+  background: #000000;
+}
+nav .nav-list .nav-link:hover i{
+  transition: 0.5s;
+}
+nav .nav-list .logout{
+  position: absolute;
+  bottom: 0;
+}
+
+.container-fluid{
+  display: flex;
+}
+
+.main{
+  position: relative;
+  padding: 20px;
+  width: 100%;
+  background-color: white;
+}
+
+.hidden {
+  display: none;
+}
+
+.subnav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutAdmin}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Bài Học</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f4f4f9;
+        }
+        .container {
+            margin-top: 40px;
+            color: #1a1a2e;
+            max-width: 900px; /* Điều chỉnh độ rộng của container */
+        }
+        h3 {
+            color: #162447;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-control {
+            margin-bottom: 20px;
+        }
+        .btn-submit {
+            background-color: #1f4068;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<section layout:fragment="content" class="container">
+    <div>
+        <h3>THÊM BÀI HỌC MỚI</h3>
+        <form th:action="@{/admin/lessons/add}" th:object="${lesson}" method="post" enctype="multipart/form-data">
+            <input type="text" class="form-control" th:field="*{title}" placeholder="Tiêu đề bài học học" required>
+            <textarea class="form-control" th:field="*{description}" placeholder="Mô tả bài học" required></textarea>
+            <textarea class="form-control" th:field="*{content}" placeholder="Nội dung bài học" required></textarea>
+            <input type="file" class="form-control" name="imageUrl" id="imageUrl" placeholder="Chọn hình ảnh" required>
+            <select th:field="*{category}" class="form-control" id="category">
+                <option th:each="category : ${categories}"
+                        th:value="${category.id}" th:text="${category.name}">
+                </option>
+            </select>
+            <button type="submit" class="btn btn-submit">Lưu</button>
+        </form>
+    </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

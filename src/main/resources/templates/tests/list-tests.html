@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutAdmin}">
+<head>
+    <title>List of Tests</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container">
+    <section layout:fragment="content" class="container">
+        <h1 class="mt-5">Danh sách đề thi</h1>
+        <a class="btn btn-dark mb-3" th:href="@{/admin/tests/create}">Thêm đề thi</a>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="test : ${tests}">
+                <td th:text="${test.examTestId}"></td>
+                <td th:text="${test.title}"></td>
+                <td>
+                    <a class="btn btn-warning" th:href="@{/admin/tests/edit/{id}(id=${test.examTestId})}">Edit</a>
+                    <form th:action="@{'/admin/tests/delete/' + ${test.examTestId}}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Are you sure you want to delete this test?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+</div>
+</body>
+</html>

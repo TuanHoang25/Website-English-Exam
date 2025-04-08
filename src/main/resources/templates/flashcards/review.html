@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout_flashcards}">
+<head>
+    <link rel="stylesheet" href="/css/style2.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+
+</head>
+<body>
+<script src="https://kit.fontawesome.com/6a22fd5207.js" crossorigin="anonymous"></script>
+<section layout:fragment="content">
+    <div class="site-content-wrapper">
+        <div class="content-header pb-0">
+            <div class="sm-container">
+                <h1 id="luyện-tập-speaking-part-2---sport">
+                    Luyện tập: flashcard
+                </h1>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="review-term-wrapper">
+                <div class="sm-container pb-0">
+                    <div>
+                        <a th:href="@{/flashcards/list/{listId}(listId=${listId})}">&lt;&lt; Xem tất cả</a>
+
+                    </div>
+                </div>
+                <div class="sm-container">
+                    <p class="alert alert-warning">
+                    </p>
+                    <br/>
+
+                    <div id="flashcard-container" class="flashcard-item-wrapper">
+                        <!-- Flashcards will be loaded here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal" id="form-modal" tabindex="-1" aria-labelledby="form-modal" aria-hidden="true"
+                 data-keyboard="false" data-backdrop="static">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <div class="modal-body" id="form-modal-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        let flashcards = [];
+        let currentCardIndex = 0;
+        let listId = /*[[${listId}]]*/;
+
+        document.addEventListener('DOMContentLoaded', function () {
+    loadFlashcards();
+});
+
+function loadFlashcards() {
+    fetch(`/flashcards/list/${listId}/review/load`)
+        .then(response => response.json())
+        .then(data => {
+            flashcards = data;
+            currentCardIndex = 0;
+            showNextCard();
+        })
+        .catch(error => console.error('Error loading flashcards:', error));
+}
+
+function showNextCard() {
+    if (currentCardIndex < flashcards.length) {
+        let card = flashcards[currentCardIndex];
+        document.getElementById('flashcard-container').innerHTML = `
+            <div class="flashcard">
+                <div class="flippable">
+                    <div class="flashcard-front">
+                        <h1 class="font-2">${card.question}</h1>
+                    </div>
+                    <div class="flashcard-back">
+                        <div class="font-500">Định nghĩa:</div>
+                        <div class="prewrap mb-2">${card.answer}</div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="flashcard-action-controls">
+                <div class="flashcard-action action-easy text-success" data-action="1" onclick="handleReviewAction(1)">
+                    <span class="far fa-smile-beam"></span> Dễ
+                </div>
+                <div class="flashcard-action action-medium text-warning" data-action="0.65" onclick="handleReviewAction(0.65)">
+                    <span class="far fa-meh"></span> Trung bình
+                </div>
+                <div class="flashcard-action action-difficult text-danger" data-action="0.1" onclick="handleReviewAction(0.1)">
+                    <span class="far fa-dizzy"></span> Khó
+                </div>
+                <div class="flashcard-action action-ignore text-gray" data-action="-1" onclick="handleReviewAction(-1)">
+                    <span class="far fa-forward"></span> Đã biết, loại khỏi danh sách ôn tập
+                </div>
+            </div>
+        `;
+
+        const flashcardElement = document.querySelector('.flippable');
+        flashcardElement.addEventListener('click', function () {
+            this.classList.toggle('flipme');
+        });
+    } else {
+        document.getElementById('flashcard-container').innerHTML = '<p>Bạn đã hoàn thành việc ôn tập!</p>';
+    }
+}
+
+function handleReviewAction(action) {
+    fetch(`/flashcards/terms/${flashcards[currentCardIndex].id}/review/action`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ action: action })
+    })
+    .then(() => {
+        currentCardIndex++;
+        showNextCard();
+    })
+    .catch(error => console.error('Error handling review action:', error));
+}
+
+    </script>
+</section>
+</body>
+</html>

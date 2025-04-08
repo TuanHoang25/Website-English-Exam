@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${title} ?: 'Your Cart'">Enrollment Confirmation</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<section layout:fragment="content" class="container mt-3">
+    <h3 style="text-align: center">ĐĂNG KÝ KHÓA HỌC THÀNH CÔNG</h3>
+    <p th:text="${message}" style="text-align: center; font-size: 18px; margin-top: 10px"></p>
+</section>
+</body>
+</html>

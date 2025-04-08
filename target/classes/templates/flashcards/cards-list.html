@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout_flashcards}">
+<head>
+    <title th:text="${title} ?: 'Cards List'">Cards List</title>
+    <link rel="stylesheet" href="/static/css/style2.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+    <style>
+        *{
+      box-sizing:border-box;
+    }
+    .container{
+      width:1000px;
+      margin:0 auto;
+      display:flex;
+      justify-content: space-between;
+    }
+    button{
+      &:focus{
+        outline:none;
+      }
+    }
+    .deck{
+    display: flex;
+      justify-content: center;
+      margin:15px;
+      width: 60%;
+      height:380px;
+      position:relative;
+      -webkit-perspective: 1000px;
+      perspective: 1000px;
+      font-family:verdana;
+      border-radius:10px;
+    }
+    .card{
+      width:100%;
+      height:100%;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      -webkit-transition: all .5s linear;
+      transition: all .2s linear;
+      border-radius:10px;
+    }
+    .face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      background-color:whitesmoke;
+      border-radius:10px;
+    }
+    .back {
+      overflow:hidden;
+      z-index:-1;
+      display: block;
+      -webkit-transform: rotateY(180deg);
+      transform: rotateY(180deg);
+      box-sizing: border-box;
+      &:before{
+        content: "";
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          z-index: -1;
+        background-size:100% 100%;
+          background-color:whitesmoke;
+          -webkit-transform: rotateY(180deg);
+          -moz-transform: rotateY(180deg);
+          -ms-transform: rotateY(180deg);
+          -o-transform: rotateY(180deg);
+          transform: rotateY(180deg);
+      }
+    }
+    .front, .back{
+      transition: all .5s linear;
+    }
+    .front{
+      background-color: whitesmoke;
+      z-index:1;
+      box-shadow: 5px 5px 5px #aaa;
+    }
+    .back{
+      box-shadow: 0 0 0 #aaa;
+    }
+    .flipped, .hovercard:hover{
+      -webkit-transform: rotateY(180deg);
+      transform: rotateY(180deg);
+      .front{
+        box-shadow:0 0 0 #aaa;
+      }
+      .back{
+        box-shadow: 5px 5px 5px #aaa;
+      }
+    }
+    .bottext{
+      position:relative;
+      color:whitesmoke;
+      width:100%;
+      height:100px;
+      bottom:0;
+      border-radius:0 0 10px 10px;
+      text-align:center;
+      padding:10px;
+      h2{
+        margin:0;
+      }
+      h3{
+        margin:10px 0;
+      }
+    }
+    .rad-button{
+      border:2px solid gray;
+      color:gray;
+      width:90px;
+      background-color:rgba(255, 255, 255, .3);
+      padding:10px;
+      border-radius:4px;
+      cursor: pointer;
+      position:absolute;
+      margin: 0 auto;
+      left: 0;
+      right: 0;
+      bottom: 110px;
+      -webkit-transition:all .5s linear;
+      transition:all .5s linear;
+    }
+    .rad-button:hover{
+      color:gray;
+      background-color:rgba(255, 255, 255, 1);
+    }
+
+    .front{
+      h2, h3{
+        text-align:center;
+        color:black;
+      }
+    }
+
+    .back{
+      h2{
+        margin:0;
+        border-radius:10px 10px 0 0;
+        padding:10px;
+        text-align:center;
+        color:black;
+      }
+      ul{
+        text-align:center;
+        list-style:none;
+        padding:10px;
+        margin:0;
+        li{
+          margin-top:15px;
+          color:black;
+        }
+      }
+      .botprice{
+        position:absolute;
+        bottom:30px;
+        border-radius:0 0 10px 10px;
+        text-align:center;
+        width:100%;
+        padding:15px;
+        color:black;
+        h3{
+          margin:0px;
+        }
+      }
+    }
+    .return{
+      position:absolute;
+      width:100%;
+      background-color:transparent;
+      border:none;
+      color:gray;
+      cursor:pointer;
+      padding:5px;
+      bottom:0;
+      border-radius:0 0 10px 10px;
+      background-color:darken(whitesmoke, 10%);
+      font-size:18px;
+      &:focus{
+        outline:none;
+      }
+    }
+    </style>
+</head>
+<body>
+<script src="https://kit.fontawesome.com/6a22fd5207.js" crossorigin="anonymous"></script>
+<section layout:fragment="content">
+    <div class="site-content-wrapper">
+        <div class="content-header pb-0">
+            <div class="sm-container">
+<!--                <div class="image-wrapper">-->
+<!--                    <a href="/courses/level-test/">-->
+<!--                        <img src="@{/static/img/testEnglishBanner.jpg}"/>-->
+<!--                    </a>-->
+<!--                </div>-->
+                <br/>
+                <h1 id="flashcards">
+                    Flashcards: <span th:text="${list.title}"></span>
+                    <a class="btn btn-primary btn-sm"
+                       th:href="@{/listflashcards/edit/{id}(id=${list.id})}"
+                       th:if="${list != null}">Chỉnh sửa</a>
+                    <a class="btn btn-primary btn-sm"
+                       th:href="@{/flashcards/list/{id}/add(id=${list.id})}"
+                       th:if="${list != null}">Thêm từ mới</a>
+                    <a class="btn btn-primary btn-sm"
+                       th:href="@{/flashcards/list/{id}/add-bulk(id=${list.id})}"
+                       th:if="${list != null}">Tạo hàng loạt</a>
+                </h1>
+
+                <p><i>a</i></p>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="sm-container">
+                <p class="alert alert-success">
+                    Chú ý: list từ vựng của bạn là tiếng anh.
+                </p>
+                <br/>
+
+                <div class="flashcard-play">
+                    <a class="btn-block btn btn-sky"
+                       th:href="@{/flashcards/lists/{listId}/review(listId=${list.id})}"
+                       th:if="${list != null}">
+                        Luyện tập flashcards
+                    </a>
+                </div>
+                <br/>
+
+                <br/>
+
+                <p th:text="'List có ' + ${cards.size()} + ' từ'">List có 0 từ</p>
+
+                <div th:each="card : ${cards}" class="termlist-item contentblock">
+                    <div class="row">
+                        <div class="col grow-0">
+                            <h2 class="h3" th:text="${card.question}">
+                            </h2>
+                            <a th:href="@{/flashcards/list/{listid}/edit/{id}(listid=${list.id}, id=${card.id})}">
+                                <span class="fa-regular fa-pen-to-square"></span>
+                            </a>
+                            <div class="font-500">Định nghĩa:</div>
+                            <div class="prewrap mb-2" th:text="${card.answer}">No definition</div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <form th:action="@{/flashcards/list/{listid}/delete/{id}(listid=${list.id}, id=${card.id})}" method="post">
+                            <button type="submit" class="far fa-trash-alt text-danger border-0 bg-transparent"></button>
+                        </form>
+                    </div>
+                </div>
+                <br/>
+
+                <nav class="jqpages">
+                    <div class="pagination">
+                        <span class="page-item active">
+                            <a class="page-link" href="?page=1">1</a>
+                        </span>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
