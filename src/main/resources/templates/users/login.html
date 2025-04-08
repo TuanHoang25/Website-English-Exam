@@ -51,10 +51,10 @@
 <body>
 <section layout:fragment="content" class="container mt-5">
     <div class="form-container">
-        <h2 class="mb-4">ĐĂNG NHẬP</h2>
+        <h2 class="mb-4">Đăng nhập</h2>
         <form th:action="@{/login}" method="post">
             <div th:if="${param.error}" class="alert alert-danger">
-                Tên đăng nhập hoặc mạta khẩu không đúng.
+                Tên đăng nhập hoặc mật khẩu khum đúng.
             </div>
             <div th:if="${param.logout}" class="alert alert-success">
                 Bạn đã đăng xuất.
@@ -72,7 +72,7 @@
             <div class="form-check mb-4">
                 <input type="checkbox" class="form-check-input" name="remember-me"
                        id="remember-me">
-                <label class="form-check-label" for="remember-me">Nhớ tài khoản</label>
+                <label class="form-check-label" for="remember-me"> Ghi Nhớ tài khoản</label>
             </div>
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
@@ -82,19 +82,10 @@
                     </svg>
                     Đăng nhập với google
                 </a>
-<!--                <a th:href="@{/oauth2/authorization/google}" class="btn btn-google-custom w-100 d-flex align-items-center justify-content-center gap-2">-->
-<!--                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48">-->
-<!--                        <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303..."/>-->
-<!--                        <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819..."/>-->
-<!--                        <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977..."/>-->
-<!--                        <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303..."/>-->
-<!--                    </svg>-->
-<!--                    Đăng nhập với Google-->
-<!--                </a>-->
 
-                <p class="mt-3 mb-0 text-center">Bạn không có tài khoản? <a class="text-info" th:href="@{/register}">Đăng ký?</a></p>
+                <p class="mt-3 mb-0 text-center">Bạn hiện không có tài khoản? <a class="text-info" th:href="@{/register}">Đăng ký?</a></p>
             </div>
-            <!-- Đăng nhập bằng Google -->
+
         </form>
     </div>
 </section>
